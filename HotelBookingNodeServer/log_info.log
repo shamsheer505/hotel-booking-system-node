@@ -1,0 +1,19 @@
+{"level":"error","message":"error unable to book room","timestamp":"2019-09-03T07:52:56.913Z"}
+{"level":"error","message":"error unable to book room","timestamp":"2019-09-03T07:54:10.708Z"}
+{"level":"error","message":"error unable to book room","timestamp":"2019-09-03T07:57:50.367Z"}
+{"level":"error","message":"error unable to book room","timestamp":"2019-09-03T09:03:12.314Z"}
+{"level":"error","message":"error unable to book room","timestamp":"2019-09-03T09:03:23.631Z"}
+{"level":"error","message":"error unable to book room","timestamp":"2019-09-03T09:03:26.293Z"}
+{"level":"error","message":"error unable to book room","timestamp":"2019-09-03T09:12:11.313Z"}
+{"level":"error","message":"error unable to book room","timestamp":"2019-09-03T09:12:39.501Z"}
+{"level":"error","message":"error unable to book room","timestamp":"2019-09-03T09:12:54.161Z"}
+{"level":"info","message":"server listening on port : 9081","timestamp":"2019-09-03T17:55:22.844Z"}
+{"level":"info","message":"Hotel booking API called to book rooms for the UserId : 123","timestamp":"2019-09-03T17:56:00.932Z"}
+{"level":"info","message":"API Request completed. Returning response","timestamp":"2019-09-03T17:56:00.999Z"}
+{"level":"info","message":"Hotel booking API called to book rooms for the UserId : 123","timestamp":"2019-09-03T17:56:34.743Z"}
+{"level":"info","message":"API Request completed. Returning response","timestamp":"2019-09-03T17:56:34.753Z"}
+{"level":"info","message":"Hotel booking API called to book rooms for the UserId : 123","timestamp":"2019-09-03T17:58:19.217Z"}
+{"level":"info","message":"Hotel booking API called to book rooms for the UserId : 123","timestamp":"2019-09-03T17:58:30.891Z"}
+{"level":"info","message":"API Request completed. Returning response","timestamp":"2019-09-03T17:58:30.901Z"}
+{"level":"info","message":"Hotel booking API called to book rooms for the UserId : 123","timestamp":"2019-09-03T18:15:28.104Z"}
+{"level":"info","message":"API Request completed. Returning response","timestamp":"2019-09-03T18:15:28.525Z"}
