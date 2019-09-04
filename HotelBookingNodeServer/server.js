@@ -8,12 +8,48 @@ const winston = require('winston');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const { check, validationResult } = require('express-validator');
-eval(fs.readFileSync('server-config.js')+'');
+eval(fs.readFileSync('server-config.js')+''); // create http server in config file
+const helmet = require('helmet');
 
 app.use(bodyParser.urlencoded({ extended: false })); // Parses urlencoded bodies
 app.use(bodyParser.json()); // Send JSON responses
 app.use(cors());
+app.use(helmet());
 //app.use(expressValidator());
+
+
+/**Helmet’s crossdomain middleware prevents Adobe Flash 
+    and Adobe Acrobat from loading content on your site.  **/
+app.use(helmet.permittedCrossDomainPolicies());
+app.use(helmet.noCache());
+// Sets "Referrer-Policy: no-referrer".
+app.use(helmet.referrerPolicy());
+
+app.use(function (req, res, next) { 
+    res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");      
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");  
+    res.header("Feature-Policy", "geolocation none;midi none;notifications none;push none;sync-xhr none;microphone none;camera none;magnetometer none;gyroscope none;speaker self;vibrate none;fullscreen self;payment none;");
+    //res.removeHeader('Content-Encoding');    
+    next();
+});
+
+app.all(['*server.js*', '*server-config.js*', '*config.json*', '*key.pem*', '*package.json*', '*bower.json*',
+'*cMSSL.crt*', '*c2.crt*', '*c3.crt*', '*ssl.key*', '*Gruntfile.js*',
+'*Dockerfile*', '*package-lock.json*', '*Public/**'], function (req, res, next){
+  res.status(404).send({
+     message: 'Not Found'
+  });
+});
+
+app.all(['/var/*','/etc/*','/bin/*','/boot/*','/dev/*','/home/*','/lib/*','/lib64/*','/lost+found/*',
+  '/media/*','/mnt/*','/opt/*','/proc/*','/root/*','/run/*','/sbin/*','/snap/*','/srv/*','/sys/*',
+  '/tmp/*','/usr/*',], function (req,res, next) {
+
+  res.status(403).send({
+     message: 'Access Forbidden'
+  });
+
+});
 
 /* logger details */
 logger = new (winston.Logger)({
@@ -31,7 +67,7 @@ logger = new (winston.Logger)({
     ]
 });
 
-//Routes
+//API Routes
 app.post('/hotelbookingservice/api/rooms',[check('userId').isLength({ min: 3 }),
         check('roomCategory').not().isEmpty(),
         check('numberOfRooms').isNumeric()],(httpReq, httpRes) => {
@@ -55,14 +91,13 @@ app.post('/hotelbookingservice/api/rooms',[check('userId').isLength({ min: 3 }),
           };
 
            var req = http.request(req_options, function (res) {
-              var datas = "";
+              var responseData = "";
               res.on('data', function (reply) {
-            	  //console.log("Data !!!");
-                   datas += reply;
+                   responseData += reply;
                });
                res.on('end', function () {
             	   logger.info('API Request completed. Returning response');
-                   httpRes.send(JSON.parse(datas));
+                   httpRes.send(JSON.parse(responseData));
                })
     });
     req.on('error', function (error) {
@@ -72,9 +107,6 @@ app.post('/hotelbookingservice/api/rooms',[check('userId').isLength({ min: 3 }),
     });
     req.write(data);
     req.end();
-        //  console.log(options);
-           //httpRes.json(JSON.parse(datas));
-        //   httpRes.json(options);
 	    }catch(error){
              logger.error('error', 'unable to book room: '+error);
              httpRes.status(500);
@@ -82,7 +114,7 @@ app.post('/hotelbookingservice/api/rooms',[check('userId').isLength({ min: 3 }),
 	    }
 });
 
-app.post('/api/users',[check('userId').isLength({ min: 3 }),
+app.post('/user-management/api/users',[check('userId').isLength({ min: 3 }),
         check('numberOfPoints').isNumeric()],(httpReq, httpRes) => {
 	    try{
           var data = JSON.stringify(httpReq.body);
@@ -99,16 +131,12 @@ app.post('/api/users',[check('userId').isLength({ min: 3 }),
           };
 
            var req = http.request(req_options, function (res) {
-              var datas = "";
+              var responseData = "";
               res.on('data', function (reply) {
-            	  //console.log("Data !!!");
-                   datas += reply;
+                   responseData += reply;
                });
                res.on('end', function () {
-            	   //console.log("Response End !!!");
-            	   //console.log(datas);
-            	   //.httpRes.status(datas.code);
-                   httpRes.send(JSON.parse(datas));
+                   httpRes.send(JSON.parse(responseData));
                })
     });
     req.on('error', function (error) {
@@ -118,9 +146,6 @@ app.post('/api/users',[check('userId').isLength({ min: 3 }),
     });
     req.write(data);
     req.end();
-        //  console.log(options);
-           //httpRes.json(JSON.parse(datas));
-        //   httpRes.json(options);
 	    }catch(error){
              console.error('error', 'unable to add bonus points now : '+error);
              httpRes.status(500);
@@ -131,7 +156,7 @@ app.post('/api/users',[check('userId').isLength({ min: 3 }),
 
 //Node server start
 
-server.listen(config._port);
+server.listen(config._port); //Read port from separate config file to maintain consistency in all the environments.
 logger.info("server listening on port : "+config._port);
 
 
